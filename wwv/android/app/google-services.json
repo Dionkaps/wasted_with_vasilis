@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "50088889291",
+    "project_id": "wastedwithvasilis",
+    "storage_bucket": "wastedwithvasilis.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:50088889291:android:d5c915433cb5a88b5b444e",
+        "android_client_info": {
+          "package_name": "com.example.wwv"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "50088889291-babbdgiti5e8k54s6mt38k17d30mtrgu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATC_s72ePo2Fqxaq3uHQ7qgrPCN34Dsog"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "50088889291-babbdgiti5e8k54s6mt38k17d30mtrgu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
