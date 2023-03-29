@@ -33,6 +33,24 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int number = 0;
+  double books = 0;
+  double movies = 0;
+  double km = 0;
+
+  deleteSuperListEl(item) {
+    DocumentReference documentReference =
+        FirebaseFirestore.instance.collection("dikaiologies").doc(item);
+
+    documentReference.delete().whenComplete(() {
+      print("Deleted");
+    });
+  }
+
+  void funFacts() {
+    books = 0.0027521132298015 * number;
+    movies = 0.0095247456167448 * number;
+    km = 0.0666685388525373 * number;
+  }
 
   @override
   void initState() {
@@ -51,19 +69,22 @@ class _MyHomePageState extends State<MyHomePage> {
             number = data['time'];
           });
         }
+        funFacts();
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Wasted On Vasilis'),
+        title: const Text('Wasted On Waiting Vasilis'),
+        elevation: 0,
       ),
       body: SizedBox(
-        height: 400,
+        height: height,
         child: Column(
           children: <Widget>[
             const Padding(
@@ -74,87 +95,123 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Text(
                       "Total time wasted",
                       style:
-                          TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 40),
                     )),
               ),
             ),
-            Expanded(
+            Padding(
+              padding: EdgeInsets.only(top: 50, bottom: 50),
               child: Align(
                 alignment: Alignment.center,
                 child: AnimatedDigitWidget(
                   value: number,
+                  textStyle: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
                   fractionDigits: 2,
                   enableSeparator: true,
                 ),
               ),
             ),
-            const Expanded(
-              child: Align(
-                  alignment: Alignment.center,
+            Align(
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 30),
                   child: Text(
                     "The equivalent of",
                     style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                  )),
-            ),
-            Expanded(
-                child: Row(
+                  ),
+                )),
+            Row(
               children: <Widget>[
                 Expanded(
                     child: Column(
-                  children: const [
-                    Expanded(
-                      child: Align(
-                          alignment: Alignment.center, child: Text("XXXX")),
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: AnimatedDigitWidget(
+                        value: books,
+                        fractionDigits: 2,
+                        enableSeparator: true,
+                      ),
                     ),
-                    Expanded(
-                      child: Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            "books read",
-                            style: TextStyle(
-                                fontSize: 17, fontWeight: FontWeight.bold),
-                          )),
-                    ),
+                    Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          "books read",
+                          style: TextStyle(
+                              fontSize: 17, fontWeight: FontWeight.bold),
+                        )),
                   ],
                 )),
                 Expanded(
                     child: Column(
-                  children: const [
-                    Expanded(
-                      child: Align(
-                          alignment: Alignment.center, child: Text("XXXX")),
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: AnimatedDigitWidget(
+                        value: movies,
+                        fractionDigits: 2,
+                        enableSeparator: true,
+                      ),
                     ),
-                    Expanded(
-                      child: Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            "movies watched",
-                            style: TextStyle(
-                                fontSize: 17, fontWeight: FontWeight.bold),
-                          )),
-                    ),
+                    Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          "movies watched",
+                          style: TextStyle(
+                              fontSize: 17, fontWeight: FontWeight.bold),
+                        )),
                   ],
                 )),
                 Expanded(
                     child: Column(
-                  children: const [
-                    Expanded(
-                      child: Align(
-                          alignment: Alignment.center, child: Text("XXXX")),
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: AnimatedDigitWidget(
+                        value: km,
+                        fractionDigits: 2,
+                        enableSeparator: true,
+                      ),
                     ),
-                    Expanded(
-                      child: Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            "km walked",
-                            style: TextStyle(
-                                fontSize: 17, fontWeight: FontWeight.bold),
-                          )),
-                    ),
+                    Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          "km walked",
+                          style: TextStyle(
+                              fontSize: 17, fontWeight: FontWeight.bold),
+                        )),
                   ],
                 )),
               ],
-            )),
+            ),
+            Padding(
+                padding: EdgeInsets.only(top: 45,bottom: 20),
+                child: Text('Recent Dikaiologies',style: TextStyle(fontSize: 20),)),
+            Expanded(
+                child: StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection("dikaiologies")
+                  .snapshots(),
+              builder: (context, snapshots) {
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: (snapshots.data)?.docs.length ?? 0,
+                  itemBuilder: (context, index) {
+                    DocumentSnapshot documentSnapshot =
+                        (snapshots.data!).docs[index];
+                    return Card(
+                      elevation: 3,
+                      margin: const EdgeInsets.all(5),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      child: ListTile(
+                        title: Text(documentSnapshot["Itemtitle"],style: TextStyle(fontStyle: FontStyle.italic),),
+                      ),
+                    );
+                  },
+                );
+              },
+            ))
           ],
         ),
       ),
@@ -165,7 +222,7 @@ class _MyHomePageState extends State<MyHomePage> {
               .doc('wastedTime');
 
           docTime.update({
-            'time': 43430,
+            'time': 234234,
           });
         },
         backgroundColor: Colors.green,
