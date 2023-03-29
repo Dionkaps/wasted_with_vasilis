@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:animated_digit/animated_digit.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -9,7 +10,7 @@ Future main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,27 +25,50 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+  const MyHomePage({Key? key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  int number = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // listen to changes in the database and update the number variable
+    final docTime = FirebaseFirestore.instance
+        .collection('totalTime')
+        .doc('wastedTime')
+        .snapshots();
+    docTime.listen((doc) {
+      if (doc.exists) {
+        final data = doc.data();
+        if (data != null) {
+          setState(() {
+            number = data['time'];
+          });
+        }
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Wasted On Vasilis'),
+        title: const Text('Wasted On Vasilis'),
       ),
       body: SizedBox(
         height: 400,
         child: Column(
           children: <Widget>[
-            Padding(
+            const Padding(
               padding: EdgeInsets.only(top: 60),
-              child: const Expanded(
+              child: Expanded(
                 child: Align(
                     alignment: Alignment.center,
                     child: Text(
@@ -54,8 +78,15 @@ class _MyHomePageState extends State<MyHomePage> {
                     )),
               ),
             ),
-            const Expanded(
-              child: Align(alignment: Alignment.center, child: Text("XXXX")),
+            Expanded(
+              child: Align(
+                alignment: Alignment.center,
+                child: AnimatedDigitWidget(
+                  value: number,
+                  fractionDigits: 2,
+                  enableSeparator: true,
+                ),
+              ),
             ),
             const Expanded(
               child: Align(
@@ -133,9 +164,9 @@ class _MyHomePageState extends State<MyHomePage> {
               .collection('totalTime')
               .doc('wastedTime');
 
-              docTime.update({
-                'time': 2,
-              });
+          docTime.update({
+            'time': 43430,
+          });
         },
         backgroundColor: Colors.green,
         child: const Icon(Icons.navigation),
