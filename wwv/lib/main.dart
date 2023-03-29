@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:motion_toast/motion_toast.dart';
-import 'dart:io';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +19,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(),
+      home: const MyHomePage(),
     );
   }
 }
@@ -59,8 +58,8 @@ class _MyHomePageState extends State<MyHomePage> {
       'time': number + int.parse(mininput),
     });
     MotionToast.success(
-      title: Text("EPITIXIA"),
-      description: Text("OLA KALA ANEVIKAN"),
+      title: const Text("EPITIXIA"),
+      description: const Text("OLA KALA ANEVIKAN"),
     ).show(context);
   }
 
@@ -108,7 +107,10 @@ class _MyHomePageState extends State<MyHomePage> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Wasted On Waiting Vasilis'),
+        title: const Text(
+          'Wasted On Waiting Vasilis',
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
         elevation: 0,
       ),
       body: SizedBox(
@@ -121,21 +123,22 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Align(
                     alignment: Alignment.center,
                     child: Text(
-                      "Total time wasted",
-                      style: TextStyle(fontSize: 40),
+                      "Total minutes wasted",
+                      style: TextStyle(fontSize: 36),
                     )),
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 50, bottom: 50),
+              padding: const EdgeInsets.only(top: 50, bottom: 50),
               child: Align(
                   alignment: Alignment.center,
                   child: Text(
                     number.toString(),
-                    style: TextStyle(fontSize: 70, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 70, fontWeight: FontWeight.bold),
                   )),
             ),
-            Align(
+            const Align(
                 alignment: Alignment.center,
                 child: Padding(
                   padding: EdgeInsets.only(bottom: 30),
@@ -153,10 +156,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         alignment: Alignment.center,
                         child: Text(
                           books.toStringAsFixed(2),
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 22),
                         )),
-                    Align(
+                    const Align(
                         alignment: Alignment.center,
                         child: Text(
                           "books read📚",
@@ -172,10 +175,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         alignment: Alignment.center,
                         child: Text(
                           movies.toStringAsFixed(2),
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 22),
                         )),
-                    Align(
+                    const Align(
                         alignment: Alignment.center,
                         child: Text(
                           "movies watched🎥",
@@ -191,10 +194,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         alignment: Alignment.center,
                         child: Text(
                           km.toStringAsFixed(2),
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 22),
                         )),
-                    Align(
+                    const Align(
                         alignment: Alignment.center,
                         child: Text(
                           "km walked🚶",
@@ -205,7 +208,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 )),
               ],
             ),
-            Padding(
+            const Padding(
                 padding: EdgeInsets.only(top: 45, bottom: 20),
                 child: Text(
                   'Recent Dikaiologies 🤥',
@@ -220,7 +223,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 return Scrollbar(
                   thumbVisibility: true,
                   thickness: 5,
-                  radius: Radius.circular(20),
+                  radius: const Radius.circular(20),
                   child: ListView.builder(
                     shrinkWrap: true,
                     itemCount: (snapshots.data)?.docs.length ?? 0,
@@ -229,14 +232,14 @@ class _MyHomePageState extends State<MyHomePage> {
                           (snapshots.data!).docs[index];
                       return Card(
                         elevation: 3,
-                        color: Color.fromARGB(255, 244, 245, 246),
+                        color: const Color.fromARGB(255, 244, 245, 246),
                         margin: const EdgeInsets.all(5),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),
                         child: ListTile(
                           title: Text(
                             documentSnapshot["Itemtitle"],
-                            style: TextStyle(fontStyle: FontStyle.italic),
+                            style: const TextStyle(fontStyle: FontStyle.italic),
                           ),
                         ),
                       );
@@ -249,7 +252,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: Padding(
-        padding: EdgeInsets.only(bottom: 15, right: 15),
+        padding: const EdgeInsets.only(bottom: 15, right: 15),
         child: FloatingActionButton(
           onPressed: () {
             showDialog(
@@ -275,7 +278,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           },
                         ),
                         Padding(
-                          padding: EdgeInsets.only(top: 40),
+                          padding: const EdgeInsets.only(top: 40),
                           child: TextField(
                             decoration: const InputDecoration(
                               labelText: 'TI DIKAIOLOGIA EIPE PALI',
@@ -291,13 +294,13 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     actions: <Widget>[
                       Padding(
-                        padding: EdgeInsets.only(top: 0),
+                        padding: const EdgeInsets.only(top: 0),
                         child: TextButton(
                             onPressed: () {
                               if (input == '' || mininput == '') {
                                 MotionToast.warning(
-                                        title: Text("EISAI VLAKAS"),
-                                        description: Text(
+                                        title: const Text("EISAI VLAKAS"),
+                                        description: const Text(
                                             "EXEIS AFISEI KAPOIO PEDIO KENO"))
                                     .show(context);
                               } else {
