@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:animated_digit/animated_digit.dart';
+import 'package:motion_toast/motion_toast.dart';
+import 'dart:io';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,6 +37,32 @@ class _MyHomePageState extends State<MyHomePage> {
   double books = 0;
   double movies = 0;
   double km = 0;
+  String input = "";
+  String mininput = "";
+  TextEditingController _textFieldController = TextEditingController();
+  TextEditingController _mintextFieldController = TextEditingController();
+
+  createSuperListEl() {
+    DocumentReference documentReference =
+        FirebaseFirestore.instance.collection("dikaiologies").doc(input);
+
+    Map<String, String> superList = {"Itemtitle": input};
+
+    documentReference.set(superList).whenComplete(() {
+      print("$input Created");
+    });
+
+    final docTime =
+        FirebaseFirestore.instance.collection('totalTime').doc('wastedTime');
+
+    docTime.update({
+      'time': number + int.parse(mininput),
+    });
+    MotionToast.success(
+      title: Text("EPITIXIA"),
+      description: Text("OLA KALA ANEVIKAN"),
+    ).show(context);
+  }
 
   deleteSuperListEl(item) {
     DocumentReference documentReference =
@@ -78,6 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         centerTitle: true,
         title: const Text('Wasted On Waiting Vasilis'),
@@ -94,22 +122,18 @@ class _MyHomePageState extends State<MyHomePage> {
                     alignment: Alignment.center,
                     child: Text(
                       "Total time wasted",
-                      style:
-                          TextStyle(fontSize: 40),
+                      style: TextStyle(fontSize: 40),
                     )),
               ),
             ),
             Padding(
               padding: EdgeInsets.only(top: 50, bottom: 50),
               child: Align(
-                alignment: Alignment.center,
-                child: AnimatedDigitWidget(
-                  value: number,
-                  textStyle: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-                  fractionDigits: 2,
-                  enableSeparator: true,
-                ),
-              ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    number.toString(),
+                    style: TextStyle(fontSize: 70, fontWeight: FontWeight.bold),
+                  )),
             ),
             Align(
                 alignment: Alignment.center,
@@ -126,19 +150,18 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Column(
                   children: [
                     Align(
-                      alignment: Alignment.center,
-                      child: AnimatedDigitWidget(
-                        value: books,
-                        fractionDigits: 2,
-                        enableSeparator: true,
-                      ),
-                    ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          books.toStringAsFixed(2),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 22),
+                        )),
                     Align(
                         alignment: Alignment.center,
                         child: Text(
-                          "books read",
+                          "books read📚",
                           style: TextStyle(
-                              fontSize: 17, fontWeight: FontWeight.bold),
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         )),
                   ],
                 )),
@@ -146,19 +169,18 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Column(
                   children: [
                     Align(
-                      alignment: Alignment.center,
-                      child: AnimatedDigitWidget(
-                        value: movies,
-                        fractionDigits: 2,
-                        enableSeparator: true,
-                      ),
-                    ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          movies.toStringAsFixed(2),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 22),
+                        )),
                     Align(
                         alignment: Alignment.center,
                         child: Text(
-                          "movies watched",
+                          "movies watched🎥",
                           style: TextStyle(
-                              fontSize: 17, fontWeight: FontWeight.bold),
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         )),
                   ],
                 )),
@@ -166,67 +188,137 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Column(
                   children: [
                     Align(
-                      alignment: Alignment.center,
-                      child: AnimatedDigitWidget(
-                        value: km,
-                        fractionDigits: 2,
-                        enableSeparator: true,
-                      ),
-                    ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          km.toStringAsFixed(2),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 22),
+                        )),
                     Align(
                         alignment: Alignment.center,
                         child: Text(
-                          "km walked",
+                          "km walked🚶",
                           style: TextStyle(
-                              fontSize: 17, fontWeight: FontWeight.bold),
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         )),
                   ],
                 )),
               ],
             ),
             Padding(
-                padding: EdgeInsets.only(top: 45,bottom: 20),
-                child: Text('Recent Dikaiologies',style: TextStyle(fontSize: 20),)),
+                padding: EdgeInsets.only(top: 45, bottom: 20),
+                child: Text(
+                  'Recent Dikaiologies 🤥',
+                  style: TextStyle(fontSize: 20),
+                )),
             Expanded(
                 child: StreamBuilder(
               stream: FirebaseFirestore.instance
                   .collection("dikaiologies")
                   .snapshots(),
               builder: (context, snapshots) {
-                return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: (snapshots.data)?.docs.length ?? 0,
-                  itemBuilder: (context, index) {
-                    DocumentSnapshot documentSnapshot =
-                        (snapshots.data!).docs[index];
-                    return Card(
-                      elevation: 3,
-                      margin: const EdgeInsets.all(5),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
-                      child: ListTile(
-                        title: Text(documentSnapshot["Itemtitle"],style: TextStyle(fontStyle: FontStyle.italic),),
-                      ),
-                    );
-                  },
+                return Scrollbar(
+                  thumbVisibility: true,
+                  thickness: 5,
+                  radius: Radius.circular(20),
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: (snapshots.data)?.docs.length ?? 0,
+                    itemBuilder: (context, index) {
+                      DocumentSnapshot documentSnapshot =
+                          (snapshots.data!).docs[index];
+                      return Card(
+                        elevation: 3,
+                        color: Color.fromARGB(255, 244, 245, 246),
+                        margin: const EdgeInsets.all(5),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        child: ListTile(
+                          title: Text(
+                            documentSnapshot["Itemtitle"],
+                            style: TextStyle(fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 );
               },
             ))
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          final docTime = FirebaseFirestore.instance
-              .collection('totalTime')
-              .doc('wastedTime');
+      floatingActionButton: Padding(
+        padding: EdgeInsets.only(bottom: 15, right: 15),
+        child: FloatingActionButton(
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    elevation: 50,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    title: const Text('Add'),
+                    content: SizedBox(
+                      height: 160,
+                      child: Column(children: [
+                        TextField(
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            labelText: 'POSO ARGISE PALI(SE LEPTA)',
+                            border: InputBorder.none,
+                          ),
+                          controller: _mintextFieldController,
+                          onChanged: (String value) {
+                            mininput = value;
+                          },
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 40),
+                          child: TextField(
+                            decoration: const InputDecoration(
+                              labelText: 'TI DIKAIOLOGIA EIPE PALI',
+                              border: InputBorder.none,
+                            ),
+                            controller: _textFieldController,
+                            onChanged: (String value) {
+                              input = value;
+                            },
+                          ),
+                        ),
+                      ]),
+                    ),
+                    actions: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(top: 0),
+                        child: TextButton(
+                            onPressed: () {
+                              if (input == '' || mininput == '') {
+                                MotionToast.warning(
+                                        title: Text("EISAI VLAKAS"),
+                                        description: Text(
+                                            "EXEIS AFISEI KAPOIO PEDIO KENO"))
+                                    .show(context);
+                              } else {
+                                createSuperListEl();
+                              }
+                              _textFieldController.clear();
+                              _mintextFieldController.clear();
+                              input = '';
+                              mininput = '';
 
-          docTime.update({
-            'time': 234234,
-          });
-        },
-        backgroundColor: Colors.green,
-        child: const Icon(Icons.navigation),
+                              //Navigator.of(context).pop(); De nomizw pws einai voliko na prostethei
+                            },
+                            child: const Text("Add")),
+                      )
+                    ],
+                  );
+                });
+          },
+          backgroundColor: Colors.blue,
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }
