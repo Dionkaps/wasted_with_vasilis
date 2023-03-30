@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "118907159162",
+    "project_id": "vasilistime-5b74a",
+    "storage_bucket": "vasilistime-5b74a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:118907159162:android:ade0487b1ccb201a28f1c3",
+        "android_client_info": {
+          "package_name": "com.example.vass"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "118907159162-eu2450d03kuopqpnbkookusj0lgbcbf9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD71wNkNWI6wpKwrTiNg5mjJV4OmNJ_EEo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "118907159162-eu2450d03kuopqpnbkookusj0lgbcbf9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
