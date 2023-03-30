@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:motion_toast/motion_toast.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,8 +17,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+      theme: ThemeData.light().copyWith(
+        textTheme: GoogleFonts.playfairDisplayTextTheme(
+          Theme.of(context).textTheme,
+        )
       ),
       home: const MyHomePage(),
     );
@@ -104,6 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 232, 239, 245),
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         centerTitle: true,
@@ -122,20 +126,26 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Expanded(
                 child: Align(
                     alignment: Alignment.center,
-                    child: Text(
-                      "Total minutes wasted",
-                      style: TextStyle(fontSize: 36),
+                    child: FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: Text(
+                        "Total minutes wasted",
+                        style: TextStyle(fontSize: 36),
+                      ),
                     )),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 50, bottom: 50),
+              padding: const EdgeInsets.only(top: 20, bottom: 45),
               child: Align(
                   alignment: Alignment.center,
-                  child: Text(
-                    number.toString(),
-                    style: const TextStyle(
-                        fontSize: 70, fontWeight: FontWeight.bold),
+                  child: FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: Text(
+                      number.toString(),
+                      style: const TextStyle(
+                          fontSize: 90, fontWeight: FontWeight.bold),
+                    ),
                   )),
             ),
             const Align(
@@ -154,17 +164,23 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: [
                     Align(
                         alignment: Alignment.center,
-                        child: Text(
-                          books.toStringAsFixed(2),
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 22),
+                        child: FittedBox(
+                          fit: BoxFit.fitWidth,
+                          child: Text(
+                            books.toStringAsFixed(2),
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 22),
+                          ),
                         )),
                     const Align(
                         alignment: Alignment.center,
-                        child: Text(
-                          "books read📚",
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
+                        child: FittedBox(
+                          fit: BoxFit.fitWidth,
+                          child: Text(
+                            "books read📚",
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
                         )),
                   ],
                 )),
@@ -173,17 +189,23 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: [
                     Align(
                         alignment: Alignment.center,
-                        child: Text(
-                          movies.toStringAsFixed(2),
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 22),
+                        child: FittedBox(
+                          fit: BoxFit.fitWidth,
+                          child: Text(
+                            movies.toStringAsFixed(2),
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 22),
+                          ),
                         )),
                     const Align(
                         alignment: Alignment.center,
-                        child: Text(
-                          "movies watched🎥",
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
+                        child: FittedBox(
+                          fit: BoxFit.fitWidth,
+                          child: Text(
+                            "movies watched🎥",
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
                         )),
                   ],
                 )),
@@ -192,17 +214,23 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: [
                     Align(
                         alignment: Alignment.center,
-                        child: Text(
-                          km.toStringAsFixed(2),
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 22),
+                        child: FittedBox(
+                          fit: BoxFit.fitWidth,
+                          child: Text(
+                            km.toStringAsFixed(2),
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 22),
+                          ),
                         )),
                     const Align(
                         alignment: Alignment.center,
-                        child: Text(
-                          "km walked🚶",
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
+                        child: FittedBox(
+                          fit: BoxFit.fitWidth,
+                          child: Text(
+                            "km walked🚶",
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
                         )),
                   ],
                 )),
@@ -211,7 +239,7 @@ class _MyHomePageState extends State<MyHomePage> {
             const Padding(
                 padding: EdgeInsets.only(top: 45, bottom: 20),
                 child: Text(
-                  'Recent Dikaiologies 🤥',
+                  '⭐Recent Dikaiologies⭐',
                   style: TextStyle(fontSize: 20),
                 )),
             Expanded(
@@ -299,9 +327,15 @@ class _MyHomePageState extends State<MyHomePage> {
                             onPressed: () {
                               if (input == '' || mininput == '') {
                                 MotionToast.warning(
-                                        title: const Text("EISAI VLAKAS"),
+                                        title: const Text("WARNING"),
                                         description: const Text(
-                                            "EXEIS AFISEI KAPOIO PEDIO KENO"))
+                                            "EXEIS AFISEI KAPOIO PEDIO KENO STOKE"))
+                                    .show(context);
+                              } else if (int.parse(mininput) < 0) {
+                                MotionToast.warning(
+                                        title: const Text("WARNING"),
+                                        description: const Text(
+                                            "GIATI VAZEIS ARNITIKOUS?🤡🤡"))
                                     .show(context);
                               } else {
                                 createSuperListEl();
